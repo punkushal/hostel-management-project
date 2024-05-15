@@ -9,6 +9,8 @@ class ReusableTextField extends StatelessWidget {
     required this.radiusValue,
     this.keyboardType,
     this.validator,
+    this.prefixIcon,
+    required this.labelText,
   });
   final TextEditingController controller;
   final String? hintText;
@@ -16,6 +18,8 @@ class ReusableTextField extends StatelessWidget {
   final double radiusValue;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final Widget? prefixIcon;
+  final String labelText;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +28,9 @@ class ReusableTextField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
+          prefixIcon: prefixIcon,
           hintText: hintText,
-          label: label,
+          labelText: labelText,
           errorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.redAccent),
             borderRadius: BorderRadius.all(
