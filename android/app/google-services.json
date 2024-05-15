@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916185162492",
+    "project_id": "hostel-app-259a2",
+    "storage_bucket": "hostel-app-259a2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916185162492:android:e981637d3f1111b2956d79",
+        "android_client_info": {
+          "package_name": "com.example.hostel_management_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH7luuoBC6IA-jUnPZH3i789D1QNzj2wQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
