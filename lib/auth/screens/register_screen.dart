@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hostel_management_project/widgets/custom_button.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
 import 'package:hostel_management_project/widgets/reusable_text_field.dart';
 
@@ -253,6 +254,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return null;
                       },
                       obsecureText: false,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    //Register button
+                    CustomButton(
+                      bgColor: Colors.green.shade400,
+                      width: 180,
+                      height: 40,
+                      radiusValue: 8,
+                      content: const Center(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
+                        ),
+                      ),
                     ),
                   ],
                 ),
