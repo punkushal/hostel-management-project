@@ -5,25 +5,27 @@ class ReusableTextField extends StatelessWidget {
     super.key,
     required this.controller,
     this.hintText,
-    required this.label,
     required this.radiusValue,
     this.keyboardType,
     this.validator,
     this.prefixIcon,
     required this.labelText,
+    required this.obsecureText,
   });
   final TextEditingController controller;
   final String? hintText;
-  final Widget label;
+
   final double radiusValue;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final Widget? prefixIcon;
   final String labelText;
+  final bool obsecureText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      obscureText: obsecureText,
       keyboardType: keyboardType,
       controller: controller,
       validator: validator,
@@ -38,13 +40,13 @@ class ReusableTextField extends StatelessWidget {
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.grey),
+            borderSide: const BorderSide(color: Colors.green),
             borderRadius: BorderRadius.all(
               Radius.circular(radiusValue),
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black12),
+            borderSide: BorderSide(color: Colors.green.shade200),
             borderRadius: BorderRadius.all(
               Radius.circular(radiusValue),
             ),
