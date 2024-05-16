@@ -25,7 +25,7 @@ class CustomContainer extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(radiusValue),
         ),
-        border: Border.all(width: 0.5, color: Colors.black),
+        border: Border.all(width: 0.5, color: Colors.green),
       ),
       child: content,
     );
