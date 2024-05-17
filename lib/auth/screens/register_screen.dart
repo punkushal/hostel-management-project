@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hostel_management_project/auth/screens/login_screen.dart';
 import 'package:hostel_management_project/widgets/custom_button.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
 import 'package:hostel_management_project/widgets/reusable_text_field.dart';
@@ -273,6 +275,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               fontSize: 18),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Already have an account ? ",
+                          style: TextStyle(fontSize: 16),
+                        ),
+
+                        //Navigate to login screen
+                        GestureDetector(
+                          onTap: () {
+                            Get.offAll(
+                              () => const LoginScreen(),
+                            );
+                          },
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(color: Colors.green, fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

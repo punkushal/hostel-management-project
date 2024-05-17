@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hostel_management_project/auth/screens/register_screen.dart';
+import 'package:hostel_management_project/auth/screens/login_screen.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const RegisterScreen(),
+      home: const LoginScreen(),
     );
   }
 }
