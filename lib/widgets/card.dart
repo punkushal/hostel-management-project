@@ -7,13 +7,13 @@ class CardDesign extends StatelessWidget {
     required this.content,
     required this.elevation,
     required this.radiusValue,
-    required this.margin,
+    this.margin,
     required this.color,
   });
   final Widget content;
   final double elevation;
   final double radiusValue;
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? margin;
   final Color color;
 
   @override
