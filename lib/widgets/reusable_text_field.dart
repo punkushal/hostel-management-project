@@ -11,6 +11,7 @@ class ReusableTextField extends StatelessWidget {
     this.prefixIcon,
     required this.labelText,
     required this.obsecureText,
+    this.suffixIcon,
   });
   final TextEditingController controller;
   final String? hintText;
@@ -21,7 +22,7 @@ class ReusableTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final String labelText;
   final bool obsecureText;
-
+  final Widget? suffixIcon;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -30,6 +31,7 @@ class ReusableTextField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
+          suffix: suffixIcon,
           prefixIcon: prefixIcon,
           hintText: hintText,
           labelText: labelText,
