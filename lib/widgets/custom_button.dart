@@ -8,21 +8,26 @@ class CustomButton extends StatelessWidget {
       this.height,
       this.bgColor,
       required this.radiusValue,
-      required this.content});
+      required this.content,
+      this.onTap});
   final double? width;
   final double? height;
   final Color? bgColor;
   final double radiusValue;
   final Widget content;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
-      width: width,
-      height: height,
-      radiusValue: radiusValue,
-      bgColor: bgColor,
-      content: content,
+    return GestureDetector(
+      onTap: onTap,
+      child: CustomContainer(
+        width: width,
+        height: height,
+        radiusValue: radiusValue,
+        bgColor: bgColor,
+        content: content,
+      ),
     );
   }
 }
