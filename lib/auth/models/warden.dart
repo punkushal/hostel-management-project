@@ -5,14 +5,19 @@ class Warden {
   final String name;
   final String phoneNumber;
   final String role;
+  final String profileImage;
+  final String hostelDocumentImage;
 
-  Warden(
-      {required this.name,
-      required this.phoneNumber,
-      required this.role,
-      required this.hostelName,
-      required this.email,
-      required this.hostelLocation});
+  Warden({
+    required this.name,
+    required this.phoneNumber,
+    required this.role,
+    required this.hostelName,
+    required this.email,
+    required this.hostelLocation,
+    required this.profileImage,
+    required this.hostelDocumentImage,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -21,6 +26,8 @@ class Warden {
       'role': role,
       'hostelName': hostelName,
       'email': email,
+      'profileImage': profileImage,
+      'hostelDocumentImage': hostelDocumentImage,
     };
   }
 
@@ -32,6 +39,8 @@ class Warden {
       hostelName: map['hostelName'] as String,
       email: map['email'] as String,
       hostelLocation: map['hostelLocation'] as String,
+      profileImage: map['profileImage'] as String,
+      hostelDocumentImage: map['hostelDocumentImage'] as String,
     );
   }
 }

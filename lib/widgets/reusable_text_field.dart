@@ -33,8 +33,13 @@ class ReusableTextField extends StatelessWidget {
           prefixIcon: prefixIcon,
           hintText: hintText,
           labelText: labelText,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+          ),
           errorBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.redAccent),
+            borderSide: BorderSide(color: Colors.red.shade300),
             borderRadius: BorderRadius.all(
               Radius.circular(radiusValue),
             ),
