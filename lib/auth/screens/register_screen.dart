@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hostel_management_project/auth/controller/auth_controller.dart';
+import 'package:hostel_management_project/auth/controller/image_controller.dart';
+import 'package:hostel_management_project/auth/models/warden.dart';
 import 'package:hostel_management_project/auth/screens/login_screen.dart';
 import 'package:hostel_management_project/widgets/custom_button.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
@@ -22,6 +27,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final phoneController = TextEditingController();
   final hostelNameController = TextEditingController();
   final hostelLocationController = TextEditingController();
+  AuthController authController = Get.put(AuthController());
+  ImageController imageController = Get.put(ImageController());
+
+  void onRegisteringWarden() async {
+    final isValid = formKey.currentState!.validate();
+    if (imageController.pickedImage == null ||
+        imageController.pickedHostelDocImage == null) {
+      if (imageController.pickedImage == null) {
+        Get.showSnackbar(GetSnackBar(
+          message: 'Please select your image profile',
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red.shade300,
+        ));
+      } else if (imageController.pickedHostelDocImage == null) {
+        Get.showSnackbar(GetSnackBar(
+          message: 'Please upload your hostel document',
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red.shade300,
+        ));
+      }
+    } else if (isValid) {
+      Warden warden = Warden(
+        name: fullNameController.text.trim(),
+        phoneNumber: phoneController.text.trim(),
+        role: 'warden',
+        hostelName: hostelNameController.text.trim(),
+        email: emailController.text.trim(),
+        hostelLocation: hostelLocationController.text.trim(),
+        profileImage: '',
+        hostelDocumentImage: '',
+      );
+
+      await authController.registerNewWarden(
+          warden, passwordController.text.trim());
+    }
+  }
 
   @override
   void dispose() {
@@ -45,15 +86,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             children: [
               //Input field for image uploading
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: CustomContainer(
-                  bgColor: Color.fromARGB(189, 211, 201, 201),
-                  radiusValue: 80,
-                  content: Icon(
-                    CupertinoIcons.person,
-                    size: 160,
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Obx(
+                  () => imageController.pickedImageFile.value == null
+                      ? const CustomContainer(
+                          bgColor: Color.fromARGB(189, 211, 201, 201),
+                          radiusValue: 80,
+                          content: Icon(
+                            CupertinoIcons.person,
+                            size: 160,
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 80,
+                          backgroundImage:
+                              FileImage(imageController.pickedImage!),
+                        ),
                 ),
               ),
 
@@ -62,14 +111,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await imageController.pickImageFromCamera();
+                    },
                     icon: const Icon(
                       CupertinoIcons.camera,
                       size: 28,
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await imageController.pickImageFromGallery();
+                    },
                     icon: const Icon(
                       CupertinoIcons.photo,
                       size: 28,
@@ -148,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //Input field for confirm password
                     ReusableTextField(
                       prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                      controller: passwordController,
+                      controller: confirlmPasswordController,
                       labelText: 'Confirm Password',
                       obsecureText: true,
                       radiusValue: 12,
@@ -206,34 +259,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
 
                     //Input field for hostel owner varification by image uploading
-                    CustomContainer(
-                      height: 160,
-                      radiusValue: 12,
-                      content: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Hostel Ownership Certificate'),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  CupertinoIcons.camera,
-                                  size: 28,
-                                ),
+                    Obx(
+                      () => imageController.pickedHostelDocImage == null
+                          ? CustomContainer(
+                              height: 160,
+                              radiusValue: 12,
+                              content: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text('Hostel Ownership Certificate'),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          await imageController
+                                              .hostelDocImagePickedFromCamera();
+                                        },
+                                        icon: const Icon(
+                                          CupertinoIcons.camera,
+                                          size: 28,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          await imageController
+                                              .hostelDocImagePickedFromGallery();
+                                        },
+                                        icon: const Icon(
+                                          CupertinoIcons.photo,
+                                          size: 28,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  CupertinoIcons.photo,
-                                  size: 28,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            )
+                          : Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: FileImage(File(imageController
+                                          .hostelDocImageFile!.path)))),
+                            ),
                     ),
 
                     const SizedBox(
@@ -262,20 +333,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     //Register button
                     CustomButton(
-                      bgColor: Colors.green.shade400,
-                      width: 180,
-                      height: 40,
-                      radiusValue: 8,
-                      content: const Center(
-                        child: Text(
-                          'Register',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                      ),
-                    ),
+                        onTap: onRegisteringWarden,
+                        bgColor: Colors.green.shade400,
+                        width: 180,
+                        height: 40,
+                        radiusValue: 8,
+                        content: Obx(
+                          () => Center(
+                            child: authController.isLoading.value == true
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
+                                    'Register',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                          ),
+                        )),
                     const SizedBox(
                       height: 20,
                     ),
