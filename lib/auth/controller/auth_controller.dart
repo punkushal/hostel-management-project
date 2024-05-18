@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/models/warden.dart';
+import 'package:hostel_management_project/screens/warden_home_screen.dart';
 
 import '../screens/login_screen.dart';
 
@@ -47,10 +48,13 @@ class AuthController extends GetxController {
     }
   }
 
+  //for login
   void signInUser(String email, String password) async {
     try {
       checkInternetConnection();
+      isLoading.value = true;
       await auth.signInWithEmailAndPassword(email: email, password: password);
+      Get.offAll(() => const WardenHomeScreen());
 
       // final userId = auth.currentUser!.uid;
     } on FirebaseAuthException catch (e) {
