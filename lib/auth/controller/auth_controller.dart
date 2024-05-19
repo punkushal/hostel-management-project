@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hostel_management_project/auth/controller/image_controller.dart';
 import 'package:hostel_management_project/auth/models/warden.dart';
 import 'package:hostel_management_project/screens/warden_home_screen.dart';
 
@@ -18,13 +20,38 @@ class AuthController extends GetxController {
   //database related functionality instantiate to database variable
   final database = FirebaseFirestore.instance;
 
+  ImageController imageController = Get.put(ImageController());
+
   //To register new warden
   registerNewWarden(Warden warden, String password) async {
     try {
       checkInternetConnection();
       isLoading.value = true;
-      await auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: warden.email, password: password);
+
+      //url for profile image
+      String urlOfProfileImage = await uploadImageFileToStorage(
+          imageController.pickedImageFile.value!);
+
+      //url for hostelDoc image
+      String urlOfHostelDocImage = await uploadHostleDocFileToStorage(
+          imageController.pickedHostelDocFile.value!);
+
+      //Getting currently created user unique id
+      String userId = userCredential.user!.uid;
+
+      database.collection('hostel-wardens').doc(userId).set(Warden(
+              name: warden.name,
+              phoneNumber: warden.phoneNumber,
+              role: warden.role,
+              hostelName: warden.hostelName,
+              email: warden.email,
+              hostelLocation: warden.hostelLocation,
+              profileImage: urlOfProfileImage,
+              hostelDocumentImage: urlOfHostelDocImage)
+          .toMap());
+
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
@@ -105,5 +132,28 @@ class AuthController extends GetxController {
         ),
       );
     }
+  }
+
+//Uploading warden profile image file to the firebase storage
+  Future<String> uploadImageFileToStorage(File imageFile) async {
+    Reference reference = FirebaseStorage.instance
+        .ref()
+        .child('Profile Images')
+        .child(auth.currentUser!.uid);
+    UploadTask uploadTask = reference.putFile(imageFile);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrlOfImage = await snapshot.ref.getDownloadURL();
+    return downloadUrlOfImage;
+  }
+
+  Future<String> uploadHostleDocFileToStorage(File imageFile) async {
+    Reference reference = FirebaseStorage.instance
+        .ref()
+        .child('Hostel Ownership Certificate')
+        .child(auth.currentUser!.uid);
+    UploadTask uploadTask = reference.putFile(imageFile);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrlOfImage = await snapshot.ref.getDownloadURL();
+    return downloadUrlOfImage;
   }
 }
