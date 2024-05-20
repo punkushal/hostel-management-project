@@ -1,16 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Room {
   final String roomNumber;
   final String capacity;
   final String currentCapacity;
   final String floor;
   final String wardenId;
-  Room(
-    this.roomNumber,
-    this.capacity,
-    this.currentCapacity,
-    this.floor,
-    this.wardenId,
-  );
+  Room({
+    required this.roomNumber,
+    required this.capacity,
+    required this.currentCapacity,
+    required this.floor,
+    required this.wardenId,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -22,13 +24,23 @@ class Room {
     };
   }
 
+  factory Room.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Room(
+        roomNumber: data['roomNumber'],
+        capacity: data['capacity'],
+        currentCapacity: data['currentCapacity'],
+        floor: data['floor'],
+        wardenId: data['wardenId']);
+  }
+
   factory Room.fromMap(Map<String, dynamic> map) {
     return Room(
-      map['roomNumber'] as String,
-      map['capacity'] as String,
-      map['currentCapacity'] as String,
-      map['floor'] as String,
-      map['wardenId'] as String,
+      roomNumber: map['roomNumber'] as String,
+      capacity: map['capacity'] as String,
+      currentCapacity: map['currentCapacity'] as String,
+      floor: map['floor'] as String,
+      wardenId: map['wardenId'] as String,
     );
   }
 }

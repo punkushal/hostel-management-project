@@ -45,11 +45,11 @@ class _AddRoomOverLayState extends State<AddRoomOverLay> {
       bool roomExists = await checkRoomExists(room.roomNumber);
       if (!roomExists) {
         await authController.database.collection('rooms').add(Room(
-                room.roomNumber,
-                room.capacity,
-                room.currentCapacity,
-                room.floor,
-                room.wardenId)
+                roomNumber: room.roomNumber,
+                capacity: room.capacity,
+                currentCapacity: room.currentCapacity,
+                floor: room.floor,
+                wardenId: room.wardenId)
             .toMap());
 
         authController.isLoading.value = false;
@@ -179,11 +179,11 @@ class _AddRoomOverLayState extends State<AddRoomOverLay> {
                           height: 34,
                           onTap: () {
                             Room room = Room(
-                              roomNumberController.text.trim(),
-                              capacityController.text.trim(),
-                              0.toString(),
-                              floorController.text.trim(),
-                              authController.auth.currentUser!.uid,
+                              roomNumber: roomNumberController.text.trim(),
+                              capacity: capacityController.text.trim(),
+                              currentCapacity: capacityController.text.trim(),
+                              floor: floorController.text.trim(),
+                              wardenId: authController.auth.currentUser!.uid,
                             );
                             onAddingRooms(room);
                           },
