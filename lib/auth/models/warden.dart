@@ -33,14 +33,14 @@ class Warden {
 
   factory Warden.fromMap(Map<String, dynamic> map) {
     return Warden(
-      name: map['name'] as String,
-      phoneNumber: map['phoneNumber'] as String,
-      role: map['role'] as String,
-      hostelName: map['hostelName'] as String,
-      email: map['email'] as String,
-      hostelLocation: map['hostelLocation'] as String,
-      profileImage: map['profileImage'] as String,
-      hostelDocumentImage: map['hostelDocumentImage'] as String,
+      name: map['name'] as String? ?? "",
+      phoneNumber: map['phoneNumber'] as String? ?? "",
+      role: map['role'] as String? ?? "",
+      hostelName: map['hostelName'] as String? ?? "",
+      email: map['email'] as String? ?? "",
+      hostelLocation: map['hostelLocation'] as String? ?? "",
+      profileImage: map['profileImage'] as String? ?? "",
+      hostelDocumentImage: map['hostelDocumentImage'] as String? ?? "",
     );
   }
 }
