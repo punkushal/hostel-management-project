@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 import 'package:hostel_management_project/auth/controller/image_controller.dart';
+import 'package:hostel_management_project/auth/controller/password_controller.dart';
 import 'package:hostel_management_project/auth/models/warden.dart';
 import 'package:hostel_management_project/auth/screens/login_screen.dart';
 import 'package:hostel_management_project/widgets/custom_button.dart';
@@ -29,6 +30,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final hostelLocationController = TextEditingController();
   AuthController authController = Get.put(AuthController());
   ImageController imageController = Get.put(ImageController());
+  PasswordController controller = Get.put(PasswordController());
 
   void onRegisteringWarden() async {
     final isValid = formKey.currentState!.validate();
@@ -48,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ));
       }
     } else if (isValid) {
+      authController.isLoading.value = true;
       Warden warden = Warden(
         name: fullNameController.text.trim(),
         phoneNumber: phoneController.text.trim(),
@@ -179,41 +182,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
 
                     //Input field for password
-                    ReusableTextField(
-                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                      controller: passwordController,
-                      labelText: 'Password',
-                      obsecureText: true,
-                      radiusValue: 12,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please provide your password';
-                        } else if (value.length < 8) {
-                          return 'Password must be at least 8 characters long';
-                        }
-                        return null;
-                      },
+                    Obx(
+                      () => ReusableTextField(
+                        prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                        controller: passwordController,
+                        labelText: 'Password',
+                        obsecureText: !controller.isPasswordVisible.value,
+                        radiusValue: 12,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please provide your password';
+                          } else if (value.length < 8) {
+                            return 'Password must be at least 8 characters long';
+                          }
+                          return null;
+                        },
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            controller.togglePasswordVisibility();
+                          },
+                          child: Icon(controller.isPasswordVisible.value
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 14,
                     ),
 
                     //Input field for confirm password
-                    ReusableTextField(
-                      prefixIcon: const Icon(CupertinoIcons.lock_fill),
-                      controller: confirlmPasswordController,
-                      labelText: 'Confirm Password',
-                      obsecureText: true,
-                      radiusValue: 12,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please provide your password';
-                        } else if (value != passwordController.text.trim()) {
-                          return 'Password do not match';
-                        }
-                        return null;
-                      },
-                    ),
+                    Obx(() => ReusableTextField(
+                          prefixIcon: const Icon(CupertinoIcons.lock_fill),
+                          controller: confirlmPasswordController,
+                          labelText: 'Confirm Password',
+                          obsecureText: !controller.isPasswordVisible.value,
+                          radiusValue: 12,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please provide your password';
+                            } else if (value !=
+                                passwordController.text.trim()) {
+                              return 'Password do not match';
+                            }
+                            return null;
+                          },
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              controller.togglePasswordVisibility();
+                            },
+                            child: Icon(controller.isPasswordVisible.value
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
+                        )),
                     const SizedBox(
                       height: 14,
                     ),

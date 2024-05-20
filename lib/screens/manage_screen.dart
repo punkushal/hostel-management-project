@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hostel_management_project/widgets/add_room_overlay.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
-import 'package:get/get.dart';
 
 class ManageScreen extends StatelessWidget {
   const ManageScreen({super.key});

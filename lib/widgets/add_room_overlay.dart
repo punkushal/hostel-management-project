@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,29 +51,39 @@ class _AddRoomOverLayState extends State<AddRoomOverLay> {
                 room.floor,
                 room.wardenId)
             .toMap());
-        // Ensure the snackbar is displayed after the room is added
-        // await Future.delayed(const Duration(milliseconds: 500));
+
         authController.isLoading.value = false;
-        Get.showSnackbar(
-          const GetSnackBar(
-            message: "Successfully room added",
-            animationDuration: Duration(seconds: 4),
-            backgroundColor: Colors.green,
-          ),
-        );
+
+        Timer(const Duration(seconds: 3), () {
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: "Successfully room added",
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.green,
+            ),
+          );
+        });
+        // Get.closeAllSnackbars();
+
         Get.back(
           closeOverlays: true,
         );
       } else {
         authController.isLoading.value = false;
-        Get.showSnackbar(
-          const GetSnackBar(
-            message: "Room number already existed",
-            animationDuration: Duration(seconds: 8),
-            backgroundColor: Colors.red,
-          ),
-        );
+        // Display the message if the room already exists
+
+        Timer(const Duration(seconds: 1), () {
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: "Room number is already existed",
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.red,
+            ),
+          );
+        });
+
         Get.back(closeOverlays: true);
+        // Get.closeAllSnackbars();
       }
     }
   }

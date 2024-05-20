@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 import 'package:hostel_management_project/auth/controller/user_controller.dart';
-import 'package:hostel_management_project/auth/screens/login_screen.dart';
 import 'package:hostel_management_project/screens/warden_details_screen.dart';
 import 'package:hostel_management_project/widgets/categories_list.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';

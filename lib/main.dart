@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hostel_management_project/auth/screens/login_screen.dart';
-// import 'package:hostel_management_project/screens/warden_home_screen.dart';
+import 'package:hostel_management_project/screens/loading_screen.dart';
+import 'package:hostel_management_project/screens/warden_home_screen.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart';
 
@@ -21,10 +23,24 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Hostel Management App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade400),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.none ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingScreen();
+          } else if (snapshot.connectionState == ConnectionState.active ||
+              snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData || snapshot.data != null) {
+              return const WardenHomeScreen();
+            }
+          }
+          return const LoginScreen();
+        }),
+      ),
     );
   }
 }
