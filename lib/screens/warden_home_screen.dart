@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 import 'package:hostel_management_project/auth/controller/user_controller.dart';
 import 'package:hostel_management_project/auth/screens/login_screen.dart';
+import 'package:hostel_management_project/screens/warden_details_screen.dart';
 import 'package:hostel_management_project/widgets/categories_list.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
 
@@ -25,16 +26,23 @@ class _WardenHomeScreenState extends State<WardenHomeScreen> {
         appBar: AppBar(
           title: const Text('Dashboard'),
           actions: [
-            IconButton(
-              onPressed: () async {
-                await authController.checkInternetConnection();
-                await authController.auth.signOut();
-                Get.offAll(() => const LoginScreen());
-              },
-              icon: const Icon(
-                Icons.logout,
-                size: 28,
-              ),
+            Obx(
+              () => userController.isLoading.value
+                  ? const CircularProgressIndicator()
+                  : IconButton(
+                      onPressed: () {
+                        Get.to(() => const WardenDetailsScreen());
+                      },
+                      icon: userController.currentWarden != null
+                          ? CircleAvatar(
+                              radius: 20,
+                              foregroundImage: NetworkImage(
+                                  userController.currentWarden!.profileImage),
+                            )
+                          : const CircleAvatar(
+                              radius: 20,
+                            ),
+                    ),
             ),
             const SizedBox(
               width: 8,
