@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 import 'package:hostel_management_project/auth/controller/password_controller.dart';
@@ -30,11 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  onLogin() async {
-    authController.signInUser(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-    );
+  void onLogin() async {
+    final isValid = formKey.currentState!.validate();
+    if (isValid) {
+      authController.isLoading.value = true;
+      await authController.signInUser(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
+    }
   }
 
   @override
@@ -45,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 32),
             child: Form(
+              key: formKey,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -139,24 +143,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     //Login button
-                    CustomButton(
-                      onTap: onLogin,
-                      bgColor: Colors.green.shade400,
-                      width: 180,
-                      height: 40,
-                      radiusValue: 8,
-                      content: Center(
-                        child: authController.isLoading.value
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                            : const Text(
-                                'Login',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
-                              ),
+                    Obx(
+                      () => CustomButton(
+                        onTap: onLogin,
+                        bgColor: Colors.green.shade400,
+                        width: 180,
+                        height: 40,
+                        radiusValue: 8,
+                        content: Center(
+                          child: authController.isLoading.value == true
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                        ),
                       ),
                     ),
 
