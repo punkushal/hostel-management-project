@@ -26,7 +26,7 @@ class AuthController extends GetxController {
   registerNewWarden(Warden warden, String password) async {
     try {
       checkInternetConnection();
-      isLoading.value = true;
+
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: warden.email, password: password);
 
@@ -51,7 +51,7 @@ class AuthController extends GetxController {
               profileImage: urlOfProfileImage,
               hostelDocumentImage: urlOfHostelDocImage)
           .toMap());
-
+      isLoading.value = false;
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
@@ -76,14 +76,13 @@ class AuthController extends GetxController {
   }
 
   //for login
-  void signInUser(String email, String password) async {
+  signInUser(String email, String password) async {
     try {
       checkInternetConnection();
-      isLoading.value = true;
-      await auth.signInWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => const WardenHomeScreen());
 
-      // final userId = auth.currentUser!.uid;
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      isLoading.value = false;
+      Get.offAll(() => const WardenHomeScreen());
     } on FirebaseAuthException catch (e) {
       String message = 'An error occurred. Please try again.';
       isLoading.value = false;
@@ -119,7 +118,7 @@ class AuthController extends GetxController {
     } //
   }
 
-  void checkInternetConnection() async {
+  checkInternetConnection() async {
     try {
       await InternetAddress.lookup('google.com');
     } catch (e) {
