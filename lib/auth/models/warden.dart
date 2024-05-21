@@ -7,6 +7,7 @@ class Warden {
   final String role;
   final String profileImage;
   final String hostelDocumentImage;
+  final String wardenId;
 
   Warden({
     required this.name,
@@ -17,6 +18,7 @@ class Warden {
     required this.hostelLocation,
     required this.profileImage,
     required this.hostelDocumentImage,
+    required this.wardenId,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +30,8 @@ class Warden {
       'email': email,
       'profileImage': profileImage,
       'hostelDocumentImage': hostelDocumentImage,
+      'hostelLocation': hostelLocation,
+      'wardenId': wardenId,
     };
   }
 
@@ -41,6 +45,7 @@ class Warden {
       hostelLocation: map['hostelLocation'] as String? ?? "",
       profileImage: map['profileImage'] as String? ?? "",
       hostelDocumentImage: map['hostelDocumentImage'] as String? ?? "",
+      wardenId: map['wardenId'] as String? ?? "",
     );
   }
 }
