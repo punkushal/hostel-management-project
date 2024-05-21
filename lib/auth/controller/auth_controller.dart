@@ -42,16 +42,19 @@ class AuthController extends GetxController {
       String userId = userCredential.user!.uid;
 
       database.collection('hostel-wardens').doc(userId).set(Warden(
-              name: warden.name,
-              phoneNumber: warden.phoneNumber,
-              role: warden.role,
-              hostelName: warden.hostelName,
-              email: warden.email,
-              hostelLocation: warden.hostelLocation,
-              profileImage: urlOfProfileImage,
-              hostelDocumentImage: urlOfHostelDocImage)
-          .toMap());
+            name: warden.name,
+            phoneNumber: warden.phoneNumber,
+            role: warden.role,
+            hostelName: warden.hostelName,
+            email: warden.email,
+            hostelLocation: warden.hostelLocation,
+            profileImage: urlOfProfileImage,
+            hostelDocumentImage: urlOfHostelDocImage,
+            wardenId: userId,
+          ).toMap());
       isLoading.value = false;
+      imageController.pickedImageFile.value = null;
+      imageController.pickedHostelDocFile.value = null;
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
