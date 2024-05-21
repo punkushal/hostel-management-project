@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,8 +35,9 @@ class _WardenHomeScreenState extends State<WardenHomeScreen> {
                       icon: userController.currentWarden != null
                           ? CircleAvatar(
                               radius: 20,
-                              foregroundImage: NetworkImage(
-                                  userController.currentWarden!.profileImage),
+                              foregroundImage: CachedNetworkImageProvider(
+                                userController.currentWarden!.profileImage,
+                              ),
                             )
                           : const CircleAvatar(
                               radius: 20,
