@@ -60,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         hostelLocation: hostelLocationController.text.trim(),
         profileImage: '',
         hostelDocumentImage: '',
+        wardenId: '',
       );
 
       await authController.registerNewWarden(
