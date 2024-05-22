@@ -7,6 +7,7 @@ import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 class RoomController extends GetxController {
   AuthController authController = Get.put(AuthController());
   RxList<String> roomNumbers = <String>[].obs;
+  Rx<String?> selectedRoom = Rx<String?>(null);
 
   Future<List<String>> fetchRoomNumbers(String wardenId) async {
     try {
