@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/auth_controller.dart';
 import 'package:hostel_management_project/auth/controller/user_controller.dart';
+import 'package:hostel_management_project/screens/budget_report_screen.dart';
 import 'package:hostel_management_project/screens/warden_details_screen.dart';
 import 'package:hostel_management_project/widgets/categories_list.dart';
+import 'package:hostel_management_project/widgets/custom_button.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
 
 class WardenHomeScreen extends StatefulWidget {
@@ -22,34 +24,35 @@ class _WardenHomeScreenState extends State<WardenHomeScreen> {
   Widget build(BuildContext context) {
     Size mq = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Dashboard'),
-          actions: [
-            Obx(
-              () => userController.isLoading.value
-                  ? const CircularProgressIndicator()
-                  : IconButton(
-                      onPressed: () {
-                        Get.to(() => const WardenDetailsScreen());
-                      },
-                      icon: userController.currentWarden != null
-                          ? CircleAvatar(
-                              radius: 20,
-                              foregroundImage: CachedNetworkImageProvider(
-                                userController.currentWarden!.profileImage,
-                              ),
-                            )
-                          : const CircleAvatar(
-                              radius: 20,
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+        actions: [
+          Obx(
+            () => userController.isLoading.value
+                ? const CircularProgressIndicator()
+                : IconButton(
+                    onPressed: () {
+                      Get.to(() => const WardenDetailsScreen());
+                    },
+                    icon: userController.currentWarden != null
+                        ? CircleAvatar(
+                            radius: 20,
+                            foregroundImage: CachedNetworkImageProvider(
+                              userController.currentWarden!.profileImage,
                             ),
-                    ),
-            ),
-            const SizedBox(
-              width: 8,
-            )
-          ],
-        ),
-        body: Obx(() => userController.isLoading.value
+                          )
+                        : const CircleAvatar(
+                            radius: 20,
+                          ),
+                  ),
+          ),
+          const SizedBox(
+            width: 8,
+          )
+        ],
+      ),
+      body: Obx(
+        () => userController.isLoading.value
             ? const Center(
                 child: CircularProgressIndicator(
                   color: Colors.blue,
@@ -108,8 +111,19 @@ class _WardenHomeScreenState extends State<WardenHomeScreen> {
                       ),
                     ),
                   ),
-                  const Expanded(child: CategoriesList())
+                  const Expanded(child: CategoriesList()),
+                  const SizedBox(
+                    width: 18,
+                  ),
+                  CustomButton(
+                      onTap: () {
+                        Get.to(() => const BudgetReportScreen());
+                      },
+                      radiusValue: 8,
+                      content: const Text('View Budget'))
                 ],
-              )));
+              ),
+      ),
+    );
   }
 }
