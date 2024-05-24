@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hostel_management_project/screens/manage_students_screen.dart';
 import 'package:hostel_management_project/widgets/add_room_overlay.dart';
 import 'package:hostel_management_project/widgets/custom_container.dart';
 
@@ -45,7 +47,9 @@ class ManageScreen extends StatelessWidget {
           ),
           Center(
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const ManageStudentsScreen());
+              },
               child: CustomContainer(
                 width: 200,
                 height: 200,
