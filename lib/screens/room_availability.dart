@@ -25,6 +25,8 @@ class _RoomAvailabilityState extends State<RoomAvailability> {
       body: StreamBuilder(
           stream: authController.database
               .collection('rooms')
+              .doc(authController.auth.currentUser!.uid)
+              .collection('added-rooms')
               .where('wardenId',
                   isEqualTo: authController.auth.currentUser!.uid)
               .snapshots(),
@@ -88,7 +90,7 @@ class _RoomAvailabilityState extends State<RoomAvailability> {
                             ),
                             CustomContainer(
                               height: 26,
-                              width: 80,
+                              width: 95,
                               bgColor:
                                   isRoomAvailable ? Colors.green : Colors.red,
                               radiusValue: 8,
