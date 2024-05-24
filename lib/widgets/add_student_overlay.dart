@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:hostel_management_project/controller/room_controller.dart';
 
 import '../auth/controller/auth_controller.dart';
 import 'custom_button.dart';
-import 'reusable_text_field.dart';
 
 class AddStudentOverlay extends StatefulWidget {
   const AddStudentOverlay({super.key});
@@ -29,38 +28,51 @@ class _AddStudentOverlayState extends State<AddStudentOverlay> {
 
   void onAddingRoom() async {
     if (roomController.selectedRoom.value != null) {
-      try {
-        QuerySnapshot snapshot = await authController.database
+      DocumentSnapshot roomDoc = await authController.database
+          .collection('rooms')
+          .doc(authController.auth.currentUser!.uid)
+          .collection('added-rooms')
+          .doc(roomController.selectedRoom.value)
+          .get();
+      int currentCapacity = int.parse(roomDoc['currentCapacity']);
+
+      if (currentCapacity > 0) {
+        currentCapacity--;
+        await authController.database
             .collection('rooms')
-            .where('roomNumber', isEqualTo: roomController.selectedRoom.value)
-            .where('warderId', isEqualTo: authController.auth.currentUser!.uid)
-            .get();
+            .doc(authController.auth.currentUser!.uid)
+            .collection('added-rooms')
+            .doc(roomController.selectedRoom.value)
+            .update({'currentCapacity': currentCapacity.toString()});
 
-        if (snapshot.docs.isNotEmpty) {
-          DocumentSnapshot roomSnapshot = snapshot.docs.first;
-          int currentCapacity = int.parse(roomSnapshot.get('currentCapacity'));
-          currentCapacity--; // Increase current capacity locally
+        roomController.selectedRoom.value = null;
 
-          // Update current capacity in Firestore
-          await authController.database
-              .collection('rooms')
-              .doc(roomSnapshot.id)
-              .update({'currentCapacity': currentCapacity.toString()});
-        } else {
-          log('Room not found for the provided criteria.');
-        }
-      } catch (e) {
-        log('Error updating room capacity: $e');
+        Timer(
+          const Duration(seconds: 2),
+          () {
+            Get.showSnackbar(
+              const GetSnackBar(
+                message: 'Room capacity is updated successfully',
+                // animationDuration: Duration(seconds: 2),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          },
+        );
+        Get.back(closeOverlays: true);
       }
-      return;
     } else {
-      Get.showSnackbar(
-        const GetSnackBar(
-          message: 'select the room number',
-          animationDuration: Duration(seconds: 2),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Timer(const Duration(seconds: 2), () {
+        Get.showSnackbar(
+          const GetSnackBar(
+            message: 'select the room number',
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+      });
+      Get.back(closeOverlays: true);
     }
   }
 
