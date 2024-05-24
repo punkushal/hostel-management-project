@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ReusableTextField extends StatelessWidget {
   const ReusableTextField({
     super.key,
-    required this.controller,
+    this.controller,
     this.hintText,
     required this.radiusValue,
     this.keyboardType,
@@ -13,7 +13,7 @@ class ReusableTextField extends StatelessWidget {
     required this.obsecureText,
     this.suffixIcon,
   });
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? hintText;
 
   final double radiusValue;
