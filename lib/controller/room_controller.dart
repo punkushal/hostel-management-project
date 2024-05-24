@@ -13,6 +13,8 @@ class RoomController extends GetxController {
     try {
       QuerySnapshot snapshot = await authController.database
           .collection('rooms')
+          .doc(wardenId)
+          .collection('added-rooms')
           .where('wardenId', isEqualTo: wardenId)
           .get();
       List<String> roomNumbers = [];
