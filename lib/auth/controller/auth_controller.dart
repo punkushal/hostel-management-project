@@ -14,7 +14,6 @@ import 'package:hostel_management_project/main.dart';
 import 'package:hostel_management_project/screens/warden_home_screen.dart';
 
 import '../models/student.dart';
-import '../screens/login_screen.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs;
