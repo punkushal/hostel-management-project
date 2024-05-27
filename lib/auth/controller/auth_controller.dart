@@ -1,19 +1,24 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hostel_management_project/auth/controller/image_controller.dart';
 import 'package:hostel_management_project/auth/models/warden.dart';
+import 'package:hostel_management_project/main.dart';
 import 'package:hostel_management_project/screens/warden_home_screen.dart';
 
+import '../models/student.dart';
 import '../screens/login_screen.dart';
 
 class AuthController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isConnected = false.obs;
   //auth related functionality instantiated to auth variable
   final auth = FirebaseAuth.instance;
 
@@ -55,7 +60,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
       imageController.pickedImageFile.value = null;
       imageController.pickedHostelDocFile.value = null;
-      Get.offAll(() => const LoginScreen());
+      Get.offAll(() => const MyApp());
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
       if (e.code == 'weak-password') {
@@ -75,6 +80,62 @@ class AuthController extends GetxController {
           ),
         );
       }
+    }
+  }
+
+//For Registering Student
+  registerNewStudent(Student student) async {
+    //To assign currently logged in warden unique id as hostel code for student
+    String wardenId = auth.currentUser!.uid;
+
+    try {
+      UserCredential studentCredential =
+          await auth.createUserWithEmailAndPassword(
+              email: student.email, password: student.phoneNumber);
+
+      //To access student currently create uid
+      String studentId = studentCredential.user!.uid;
+
+      database.collection('students').doc(studentId).set(Student(
+              name: student.name,
+              phoneNumber: student.phoneNumber,
+              roomNumber: student.roomNumber,
+              email: student.email,
+              guardianName: student.guardianName,
+              guardianNumber: student.guardianNumber,
+              wardenId: wardenId,
+              studentId: studentId)
+          .toMap());
+      Timer(
+        const Duration(seconds: 2),
+        () {
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: 'student is added successfully',
+              // animationDuration: Duration(seconds: 2),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      String message = "";
+      if (e.code == 'email-already-in-use') {
+        message = 'Account already existed';
+      } else if (e.code == 'invalid-email') {
+        message = "You've entered invalid email";
+      } else if (e.code == 'operation-not-allowed') {
+        message = "You're email address is not enabled";
+      }
+
+      Get.showSnackbar(
+        GetSnackBar(
+          message: message,
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
