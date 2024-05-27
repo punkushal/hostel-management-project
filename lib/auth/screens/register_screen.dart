@@ -217,7 +217,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           prefixIcon: const Icon(CupertinoIcons.lock_fill),
                           controller: confirlmPasswordController,
                           labelText: 'Confirm Password',
-                          obsecureText: !controller.isPasswordVisible.value,
+                          obsecureText:
+                              !controller.isConfirmPasswordVisible.value,
                           radiusValue: 12,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -230,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                           suffixIcon: GestureDetector(
                             onTap: () {
-                              controller.togglePasswordVisibility();
+                              controller.toggleConfirmPasswordVisibility();
                             },
                             child: Icon(controller.isPasswordVisible.value
                                 ? Icons.visibility
