@@ -117,8 +117,19 @@ class _WardenDetailsScreenState extends State<WardenDetailsScreen> {
                     width: 66,
                     bgColor: Colors.green,
                     onTap: () async {
-                      await userController.authController.auth.signOut();
-                      Get.offAll(() => const LoginScreen());
+                      try {
+                        userController.authController.checkInternetConnection();
+                        await userController.authController.auth.signOut();
+                        Get.offAll(() => const LoginScreen());
+                      } catch (e) {
+                        Get.showSnackbar(
+                          const GetSnackBar(
+                            message: 'No internet Connection',
+                            backgroundColor: Colors.redAccent,
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
                     },
                     radiusValue: 8,
                     content: const Center(
